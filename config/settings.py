@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f!mfv&gx^%ie1ge4cd$lwp-shfzb6*p4n9c24kus+nzt^g!_%z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mercave-backend.azurewebsites.net', 'localhost:8000', 'localhost',]
 
 
 # Application definition
@@ -44,12 +44,19 @@ INSTALLED_APPS = [
     'eventos',
     'material',
     'organizaciones',
+    'ingenieria',
+    'red_ferroviaria',
+    'streaming',
     'usuarios',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # whitenoise y corsheaders middleware despues de security middleware  
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -59,18 +66,18 @@ MIDDLEWARE = [
 
 # REST framework configuration
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny',],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',],
 }
 # CORS HEADERS configuration
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://localhost:8000',
-    'http://mercave-data-factory.azurewebsites.net',
+    'http://mercave-backend.azurewebsites.net',
 )
 # CSRF Configuration
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:3000',
-    'http://mercave-data-factory.azurewebsites.net',
+    'http://mercave-backend.azurewebsites.net',
 ]
 
 
@@ -145,6 +152,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
 

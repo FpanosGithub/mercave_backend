@@ -1,50 +1,8 @@
 from django.db import models
 from django.urls import reverse
-from organizaciones.models import Operador, Fabricante, Mantenedor, Keeper, Diseñador, Aprovador, Certificador
+from organizaciones.models import Operador, Fabricante, Mantenedor, Keeper
+from ingenieria.models import VersionEje, VersionCambiador 
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Modelos que representan la ingeniería de los elementos mercave / Activos inmateriales
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-class VersionEje(models.Model):
-    codigo= models.CharField(max_length=16, unique= True)
-    opciones_anchos =  [('UIC-IB', 'UIC(1435) <> IBÉRICO (1668)'),
-                        ('UIC-RUS', 'UIC(1435) <> RUSO (1520)'),
-                        ('UIC-RUS-IB', 'UIC <> RUSO <> IBÉRICO'),
-                        ('METR-UIC', 'MÉTRICO(1000) <> UIC(1435)'),]
-    anchos = models.CharField(max_length=12, choices = opciones_anchos, default = 'UIC-IB')
-    diseñador = models.ForeignKey(Diseñador, on_delete=models.RESTRICT, limit_choices_to={'de_ejes': True},)
-    rueda = models.CharField(max_length=16)
-    cuerpo_eje = models.CharField(max_length=16)
-    aprovador = models.ForeignKey(Aprovador, on_delete=models.RESTRICT)
-    fecha_aprovacion = models.DateField(null=True, blank=True)
-    certificador = models.ForeignKey(Certificador, on_delete=models.RESTRICT)
-    fecha_certificacion = models.DateField(null=True, blank=True)
-    def __str__(self):
-        return self.codigo
-    def get_absolute_url(self):
-        return reverse("ficha_version_eje", kwargs={'pk':self.pk})
-
-class VersionCambiador(models.Model):
-    codigo= models.CharField(max_length=16, unique= True)
-    opciones_anchos =  [('UIC-IB', 'UIC(1435) <> IBÉRICO (1668)'),
-                        ('UIC-RUS', 'UIC(1435) <> RUSO (1520)'),
-                        ('METR-UIC', 'MÉTRICO(1000) <> UIC(1435)'),]
-    anchos = models.CharField(max_length=12, choices = opciones_anchos, default = 'UIC-IB')
-    diseñador = models.ForeignKey(Diseñador, on_delete=models.RESTRICT, limit_choices_to={'de_cambiadores': True},)
-    fabricante = models.ForeignKey(Fabricante, on_delete=models.RESTRICT, limit_choices_to={'de_cambiadores': True}, null=True, blank=True)
-    longitud_desencerrojado = models.FloatField(default=6000)   # mm
-    longitud_cambio_rueda = models.FloatField(default=6000)     # mm
-    longitud_encerrojado = models.FloatField(default=6000)      # mm
-    longitud_total = models.FloatField(default = 36000)         # mm
-    aprovador = models.ForeignKey(Aprovador, on_delete=models.RESTRICT)
-    fecha_aprovacion = models.DateField(null=True, blank=True)
-    certificador = models.ForeignKey(Certificador, on_delete=models.RESTRICT)
-    fecha_certificacion = models.DateField(null=True, blank=True)
-    def __str__(self):
-        return self.codigo
-    def get_absolute_url(self):
-        return reverse("ficha_version_cambiador", kwargs={'pk':self.pk})
-            
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # Elementos del sistema Mercave / Activos físicos
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -79,8 +37,18 @@ class Vagon(models.Model):
     keeper= models.ForeignKey(Keeper, on_delete=models.RESTRICT, null=True, blank=True)
     mantenedor= models.ForeignKey(Mantenedor, on_delete=models.RESTRICT, limit_choices_to={'de_vagones': True}, null=True, blank=True)
     composicion= models.ForeignKey(Composicion, on_delete=models.RESTRICT, null=True, blank=True)
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Variables de estado del vagón para gestionar los eventos de circulación
+    transmitiendo = models.BooleanField(default=False)
+    parado = models.BooleanField(default=True)
+    alarma_temp = models.BooleanField(default=False)
+    alarma_aceleraciones = models.BooleanField(default=False)
+    ultimo_evento_dt = models.DateField(null=True, blank=True)
+    ultimo_evento_circ = models.BooleanField(default=True)
+    vel = models.FloatField(default=0, null=True, blank=True)
     lng = models.FloatField(default=-3.9820) # grados
     lat = models.FloatField(default=40.2951) # grados
+    #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     def __str__(self):
         return self.codigo
     def get_absolute_url(self):
@@ -131,11 +99,11 @@ class Bogie(models.Model):
 
 class Eje(models.Model):
     codigo = models.CharField(max_length=10, unique= True)
-    version= models.ForeignKey(VersionEje, on_delete=models.RESTRICT)
-    fabricante = models.ForeignKey(Fabricante, on_delete=models.RESTRICT, limit_choices_to={'de_ejes': True},)
-    keeper = models.ForeignKey(Keeper, on_delete=models.RESTRICT)
-    operador = models.ForeignKey(Operador, on_delete=models.RESTRICT)
-    mantenedor = models.ForeignKey(Mantenedor, on_delete=models.RESTRICT)
+    version= models.ForeignKey(VersionEje, on_delete=models.RESTRICT, null=True, blank=True)
+    fabricante = models.ForeignKey(Fabricante, on_delete=models.RESTRICT, limit_choices_to={'de_ejes': True},null=True, blank=True)
+    keeper = models.ForeignKey(Keeper, on_delete=models.RESTRICT, null=True, blank=True)
+    operador = models.ForeignKey(Operador, on_delete=models.RESTRICT, null=True, blank=True)
+    mantenedor = models.ForeignKey(Mantenedor, on_delete=models.RESTRICT, null=True, blank=True)
     fecha_fab = models.DateField(null=True, blank=True)
     num_cambios = models.IntegerField(default=0)
     km = models.FloatField(default=0)         # km
@@ -167,13 +135,12 @@ class Eje(models.Model):
         self.vagon = vagon
         self.save()
 
-
 class Cambiador(models.Model):
     codigo = models.CharField(max_length=16, unique= True)
     nombre = models.CharField(max_length=100, default = 'Experimental-01')
-    version= models.ForeignKey(VersionCambiador, on_delete=models.RESTRICT)
-    fabricante = models.ForeignKey(Fabricante, on_delete=models.RESTRICT, limit_choices_to={'de_cambiadores': True},)
-    mantenedor = models.ForeignKey(Mantenedor, on_delete=models.RESTRICT, limit_choices_to={'de_cambiadores': True},)
+    version= models.ForeignKey(VersionCambiador, on_delete=models.RESTRICT, null=True, blank=True)
+    fabricante = models.ForeignKey(Fabricante, on_delete=models.RESTRICT, limit_choices_to={'de_cambiadores': True},null=True, blank=True)
+    mantenedor = models.ForeignKey(Mantenedor, on_delete=models.RESTRICT, limit_choices_to={'de_cambiadores': True},null=True, blank=True)
     fecha_fab = models.DateField(null=True, blank=True)
     num_cambios = models.IntegerField(default=0)
     mantenimiento = models.CharField(max_length=16)

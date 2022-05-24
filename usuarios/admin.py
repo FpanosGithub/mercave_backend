@@ -9,8 +9,8 @@ class UsuarioAdmin(UserAdmin):
     add_form = CrearUsuarioForm
     form = ModificarUsuarioForm
     model = Usuario
-    list_display = ['email','username', 'telefono', 'puesto', 'is_staff']
-    fieldsets = UserAdmin.fieldsets + ((None, {"fields":("telefono","puesto",)}),)
-    add_fieldsets = UserAdmin.add_fieldsets + ((None, {"fields":("telefono","puesto",)}),)
+    list_display = ['username', 'telefono', 'puesto', 'organizacion', 'email', 'is_staff']
+    fieldsets = UserAdmin.fieldsets + ((None, {"fields":("telefono","puesto", 'organizacion',)}),)
+    add_fieldsets = UserAdmin.add_fieldsets + ((None, {"fields":("telefono","puesto", 'organizacion',)}),)
 
 admin.site.register(Usuario, UsuarioAdmin)

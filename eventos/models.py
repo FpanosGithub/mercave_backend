@@ -1,30 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from material.models import Vagon, Bogie, Eje, Cambiador
+from red_ferroviaria.models import PuntoRed
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Modelos que identifican puntos singulares de la red ferroviaria
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-class Linea(models.Model):
-    codigo = models.CharField(max_length=16, unique= True)
-    nombre = models.CharField(max_length=100, null= True, blank = True)
-    def __str__(self):
-        return (str(self.codigo) + '-' + str(self.nombre))
-    def get_absolute_url(self):
-        return reverse("ficha_linea", kwargs={'pk':self.pk})
-
-class PuntoRed(models.Model):
-    codigo = models.CharField(max_length=16, unique= True)
-    descripcion = models.CharField(max_length=100, null= True, blank = True)
-    linea = models.ForeignKey(Linea, on_delete=models.RESTRICT, null= True, blank = True)
-    pkilometrico = models.FloatField(null= True, blank = True)
-    lng = models.FloatField(default=-3.9820)
-    lat = models.FloatField(default=40.2951)
-    def __str__(self):
-        if self.codigo: return (str(self.codigo) + ' - ' + str(self.lng) + ':' + str(self.lat))
-        else: return ''
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# EVENTOS DEL EJE. Llegan desde API de mercave_simulacion o mercave_circulación (IoT, IA).
+# EVENTOS. Son generados desde el análisis del streaming de datos
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # CAMBIO. Cada cambio registra sus valores y dispara un evento para el eje
@@ -79,7 +59,6 @@ class Mantenimiento(models.Model):
         return (str(self.pk) + ' - eje: ' + str(self.eje.codigo) + ' - ' + str(self.tipo))
     def get_absolute_url(self):
         return reverse("ficha_mantenimiento", kwargs={'pk':self.pk})
-
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # ALARMAS 
@@ -165,6 +144,7 @@ class EventoEje(models.Model):
     opciones_evento =  [('START', 'EMPIEZA'),
                         ('STOP', 'PARA'),
                         ('CIRC', 'CIRCULANDO'),
+                        ('NUDO','NUDO'),
                         ('ALARM_TEMP', 'ALARMA_TEMPERATURA'),
                         ('ALARM_ACEL', 'ALARMA_ACELERACIONES'),
                         ('INIT_MANT', 'INICIO_MANTENIMIENTO'),
