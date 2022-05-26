@@ -44,7 +44,7 @@ class Vagon(models.Model):
     alarma_temp = models.BooleanField(default=False)
     alarma_aceleraciones = models.BooleanField(default=False)
     ultimo_evento_dt = models.DateField(null=True, blank=True)
-    ultimo_evento_circ = models.BooleanField(default=True)
+    en_nudo = models.BooleanField(default=False)
     vel = models.FloatField(default=0, null=True, blank=True)
     lng = models.FloatField(default=-3.9820) # grados
     lat = models.FloatField(default=40.2951) # grados
@@ -82,6 +82,7 @@ class Bogie(models.Model):
     vagon= models.ForeignKey(Vagon, on_delete=models.RESTRICT, null=True, blank=True)
     lng = models.FloatField(default=-3.9820) # grados
     lat = models.FloatField(default=40.2951) # grados
+    vel = models.FloatField(default=0, null=True, blank=True)
     def __str__(self):
         return self.codigo
     def get_absolute_url(self):
@@ -111,9 +112,11 @@ class Eje(models.Model):
     bogie = models.ForeignKey(Bogie, on_delete=models.RESTRICT, null=True, blank=True)
     vagon = models.ForeignKey(Vagon, on_delete=models.RESTRICT, null=True, blank=True)
     estado = models.CharField(max_length=15, choices = [('CIRCULANDO','CIRCULANDO'),('PARADO','PARADO'),('MANTENIMIENTO','MANTENIMIENTO')], default = 'PARADO')
-    alarma = models.BooleanField(default=False)
+    alarma_temp = models.BooleanField(default=False)
+    alarma_aceleraciones = models.BooleanField(default=False)
     lng = models.FloatField(default=-3.9820)
     lat = models.FloatField(default=40.2951)
+    vel = models.FloatField(default=0, null=True, blank=True)
     def __str__(self):
         return self.codigo
     def get_absolute_url(self):
