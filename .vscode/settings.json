@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/fd0b8763-48d3-4b8f-837d-1effb39099d9/microsoft.web/sites/subscriptions/fd0b8763-48d3-4b8f-837d-1effb39099d9/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/mercave-backend",
+    "appService.deploySubpath": "."
+}

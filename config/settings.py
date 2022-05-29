@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f!mfv&gx^%ie1ge4cd$lwp-shfzb6*p4n9c24kus+nzt^g!_%z
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mercave-backend.azurewebsites.net', 'localhost:8000', 'localhost',]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     # terceros
     'rest_framework',
@@ -140,19 +141,20 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+STATICFILES_FINDERS = [
+                        "django.contrib.staticfiles.finders.FileSystemFinder", 
+                        "django.contrib.staticfiles.finders.AppDirectoriesFinder"
+                    ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = str(BASE_DIR.joinpath('media'))
