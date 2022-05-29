@@ -2,7 +2,6 @@ from pymongo import MongoClient
 from material.models import Vagon, Bogie, Eje
 from red_ferroviaria.models import PuntoRed
 from eventos.models import EventoEje, EventoVagon
-from streaming.serializers import ObjetoPy
 from datetime import datetime
 
 ACC_TIPICA_EJE_X = 2.1
@@ -50,10 +49,6 @@ def umbral_aceleraciones(aax,abx,aay,aby,aaz,abz):
         Si estamos por debajo los umbrales - Delta -> return - 1 
         o si estamos en valores de umbrales +/- Delta -> return 0
     '''
-    aax.extend(abx)
-    aay.extend(aby)
-    aaz.extend(abz)
-
     acc = -1
     # ax
     for valor in aax:
@@ -66,10 +61,27 @@ def umbral_aceleraciones(aax,abx,aay,aby,aaz,abz):
         if valor > (ACC_TIPICA_EJE_Y * 1.1):
             return 1
         if valor < (ACC_TIPICA_EJE_Y * 1.1) and valor > (ACC_TIPICA_EJE_Y * 0.9):
-            acc = 0
-    
+            acc = 0 
     # az
     for valor in aaz:
+        if valor > (ACC_TIPICA_EJE_Z * 1.1):
+            return 1
+        if valor < (ACC_TIPICA_EJE_Z * 1.1) and valor > (ACC_TIPICA_EJE_Z * 0.9):
+            acc = 0
+    # bx
+    for valor in abx:
+        if valor > (ACC_TIPICA_EJE_X * 1.1):
+            return 1
+        if valor < (ACC_TIPICA_EJE_X * 1.1) and valor > (ACC_TIPICA_EJE_X * 0.9):
+            acc = 0
+    # by
+    for valor in aby:
+        if valor > (ACC_TIPICA_EJE_Y * 1.1):
+            return 1
+        if valor < (ACC_TIPICA_EJE_Y * 1.1) and valor > (ACC_TIPICA_EJE_Y * 0.9):
+            acc = 0
+    # bz
+    for valor in abz:
         if valor > (ACC_TIPICA_EJE_Z * 1.1):
             return 1
         if valor < (ACC_TIPICA_EJE_Z * 1.1) and valor > (ACC_TIPICA_EJE_Z * 0.9):
@@ -231,7 +243,6 @@ class Circulacion():
         if (self.lng_ini == self.lng_fin) and (self.lat_ini == self.lat_fin):
             self.en_movimiento = False
             self.vel = 0.0
-
         # Sacamos y verificamos la lista de ejes y valores asociados a los ejes del mensaje                
         self.ejes = []
         self.lista_ejes = []
@@ -359,8 +370,11 @@ class Circulacion():
     # GUARDAMOS DATOS DE LA CIRCULACIÓN
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     def guardar(self):
-        # Guardamos mensajes de vagón y ejes en mongo_db
-        #guardar_mongo()
+        # inicializamos MONGO_DB para guardar mensajes de vagón y ejes
+        cluster = 'mongodb+srv://admintria:dpJPkafvGJPHXbnN@cluster0.2wbih.mongodb.net/?retryWrites=true&w=majority'
+        client = MongoClient(cluster)    
+        mercave_mongo = client.mercave_mongo
+
         # Vagón
         self.vagon.lng = self.lng_fin
         self.vagon.lat = self.lat_fin
@@ -370,10 +384,41 @@ class Circulacion():
         self.vagon.en_nudo = self.en_nudo_fin
         self.vagon.alarma = self.alarma
         self.vagon.ultimo_evento_dt = self.ultimo_evento_dt
+        # Guardamos vagón en mercave_sql
         self.vagon.save()
+        # Guardamos circulación - vagón en mercave_mongo
+        msg= {
+            'dt': self.dt.strftime("%m/%d/%Y %H:%M:%S"), 
+            'tipo_msg':self.tipo_msg,
+            'vagon': self.vagon.codigo, 
+            'lng':self.vagon.lng, 
+            'lat':self.vagon.lat,
+            'vel':self.vagon.vel,
+            }
+        mercave_mongo.circulaciones_vagones.insert_one(msg)
+
         # Ejes 
         for eje in self.ejes:  
-            eje.guardar(self.vagon)         
-        
+            # Guardamos eje en mercave_sql
+            eje.guardar(self.vagon)   
+            # Guardamos circulación - eje en mercave_mongo
+            msg= {
+            'dt': self.dt.strftime("%m/%d/%Y %H:%M:%S"), 
+            'tipo_msg':self.tipo_msg,
+            'eje':eje.codigo,
+            'en_vagon': self.vagon.codigo, 
+            'lng':self.vagon.lng, 
+            'lat':self.vagon.lat,
+            'vel':self.vagon.vel, 
+            'tempa': eje.tempa, 
+            'tempb': eje.tempb, 
+            'aax':eje.aax,
+            'aay':eje.aay,
+            'aaz':eje.aaz,
+            'abx':eje.abx,
+            'aby':eje.aby,
+            'abz':eje.abz,
+            }
+            mercave_mongo.circulaciones_ejes.insert_one(msg)
+               
         limpiar_ejes_sueltos(self.vagon, self.lista_ejes) # Siguiente versión metemos los bogies también                                          
-        

@@ -1,24 +1,5 @@
 from rest_framework import serializers
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# Función que convierten una estructura de diccionarios anidados tipo JSON 
-# en un un objeto python
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-class ObjetoPy(object):
-    '''Convierte la estructuar en objetos con los nombres de las keys pero son todo tipo str'''
-    def __init__(self, data):
-        data = dict(data)
-        for key, val in data.items():
-            setattr(self, key, self.compute_attr_value(val))
-
-    def compute_attr_value(self, value):
-        if isinstance(value, list):
-            return [self.compute_attr_value(x) for x in value]
-        elif isinstance(value, dict):
-            return ObjetoPy(value)
-        else:
-            return value
-
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # DRF Serializers
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -53,5 +34,3 @@ class ValidadorMensajeCirculacion(serializers.Serializer):
     lat = serializers. FloatField(default = 0)
     vel = serializers. FloatField(default = 0)
     msgs_ejes = ValEje(many=True)
-      
-
