@@ -3,9 +3,9 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
-from streaming.logicas import subir_mongo, procesar_mensaje
-from streaming.serializers import ValidadorMensajeCirculacion, ObjetoPy
-from streaming.mensajes_hht import data1num
+from streaming.serializers import ValidadorMensajeCirculacion
+from streaming.mensajes_hht import data3num
+from streaming.circulacion import Circulacion
 
 
 # Create your views here.
@@ -13,7 +13,7 @@ from streaming.mensajes_hht import data1num
 @permission_classes([AllowAny])
 def MensajeCirculacion(request):
     if request.method == 'GET':
-        data = data1num
+        data = data3num
         mensaje = ValidadorMensajeCirculacion(data=data)
         if mensaje.is_valid():
             return Response(data)
@@ -21,12 +21,15 @@ def MensajeCirculacion(request):
         return Response(mensaje.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'POST':
-        mensaje = ValidadorMensajeCirculacion(data = request.data)
-        if mensaje.is_valid():
+        circulacion = Circulacion(request.data)
+        #mensaje = ValidadorMensajeCirculacion(data = request.data)
+        if circulacion.valida:
             #subir_mongo(request.data)
             #circulacion = ObjetoPy(request.data)
-            # comprobar_eventos(circulacion)
-            procesar_mensaje(mensaje)
-            return Response(mensaje.data, status = status.HTTP_201_CREATED)
-    return Response(mensaje.errors, status=status.HTTP_400_BAD_REQUEST)
+            #procesar_mensaje(circulacion)
+            # procesar_mensaje(mensaje)
+            circulacion.eventos()
+            circulacion.guardar()
+            return Response(request.data, status = status.HTTP_201_CREATED)
+    return Response(circulacion.error, status=status.HTTP_400_BAD_REQUEST)
 

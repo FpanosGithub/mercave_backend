@@ -41,9 +41,8 @@ class Vagon(models.Model):
     # Variables de estado del vagón para gestionar los eventos de circulación
     transmitiendo = models.BooleanField(default=False)
     parado = models.BooleanField(default=True)
-    alarma_temp = models.BooleanField(default=False)
-    alarma_aceleraciones = models.BooleanField(default=False)
-    ultimo_evento_dt = models.DateField(null=True, blank=True)
+    alarma = models.BooleanField(default=False)
+    ultimo_evento_dt = models.DateTimeField(null=True, blank=True)
     en_nudo = models.BooleanField(default=False)
     vel = models.FloatField(default=0, null=True, blank=True)
     lng = models.FloatField(default=-3.9820) # grados
@@ -107,13 +106,15 @@ class Eje(models.Model):
     mantenedor = models.ForeignKey(Mantenedor, on_delete=models.RESTRICT, null=True, blank=True)
     fecha_fab = models.DateField(null=True, blank=True)
     num_cambios = models.IntegerField(default=0)
-    km = models.FloatField(default=0)         # km
+    km = models.FloatField(default=0)                                                                       # km
     coef_trabajo = models.FloatField(default=0)
     bogie = models.ForeignKey(Bogie, on_delete=models.RESTRICT, null=True, blank=True)
     vagon = models.ForeignKey(Vagon, on_delete=models.RESTRICT, null=True, blank=True)
     estado = models.CharField(max_length=15, choices = [('CIRCULANDO','CIRCULANDO'),('PARADO','PARADO'),('MANTENIMIENTO','MANTENIMIENTO')], default = 'PARADO')
     alarma_temp = models.BooleanField(default=False)
     alarma_aceleraciones = models.BooleanField(default=False)
+    tempa = models.FloatField(default=25.0, null=True, blank=True)
+    tempb = models.FloatField(default=25.0, null=True, blank=True)
     lng = models.FloatField(default=-3.9820)
     lat = models.FloatField(default=40.2951)
     vel = models.FloatField(default=0, null=True, blank=True)

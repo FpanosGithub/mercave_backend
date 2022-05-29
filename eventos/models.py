@@ -73,58 +73,14 @@ class AlarmaCambio(models.Model):
         return reverse("alarma_cambio", kwargs={'pk':self.pk})
 
 class AlarmaTemp(models.Model):
-    mensaje = models.CharField(max_length=30)
-    vista = models.BooleanField(default=False)
-    t0 = models.FloatField(default = 25)
-    t1 = models.FloatField(default = 25)
-    t2 = models.FloatField(default = 25)
-    t3 = models.FloatField(default = 25)
-    t4 = models.FloatField(default = 25)
-    t5 = models.FloatField(default = 25)
-    t6 = models.FloatField(default = 25)
-    t7 = models.FloatField(default = 25)
-    t8 = models.FloatField(default = 25)
-    t9 = models.FloatField(default = 25)
-    def __str__(self):
-        return (self.mensaje)
+    eje = models.ForeignKey(Eje, on_delete=models.CASCADE, null= True, blank = True)
+    
     def get_absolute_url(self):
         return reverse("alarma_temperatura", kwargs={'pk':self.pk})
 
 class AlarmaAceleracion(models.Model):
-    mensaje = models.CharField(max_length=30)
-    vista = models.BooleanField(default=False)
-    ax0 = models.FloatField(default = 2) 
-    ay0 = models.FloatField(default = 1) 
-    az0 = models.FloatField(default = 0)
-    ax1 = models.FloatField(default = 0)
-    ay1 = models.FloatField(default = 3)
-    az1 = models.FloatField(default = 4)
-    ax2 = models.FloatField(default = -2)
-    ay2 = models.FloatField(default = 1)
-    az2= models.FloatField(default = 0)
-    ax3 = models.FloatField(default = 0)
-    ay3 = models.FloatField(default = -1)
-    az3= models.FloatField(default = -4)
-    ax4 = models.FloatField(default = 2)
-    ay4 = models.FloatField(default = -3)
-    az4= models.FloatField(default = 0)
-    ax5 = models.FloatField(default = 0)
-    ay5 = models.FloatField(default = -1)
-    az5 = models.FloatField(default = 4)
-    ax6 = models.FloatField(default = -2)
-    ay6 = models.FloatField(default = 1)
-    az6 = models.FloatField(default = 0)
-    ax7 = models.FloatField(default = 0)
-    ay7 = models.FloatField(default = 3)
-    az7 = models.FloatField(default = -4)
-    ax8 = models.FloatField(default = 2)
-    ay8 = models.FloatField(default = 1)
-    az8 = models.FloatField(default = 0)
-    ax9 = models.FloatField(default = 0)
-    ay9 = models.FloatField(default = -1)
-    az9= models.FloatField(default = 4)
-    def __str__(self):
-        return (self.mensaje)
+    eje = models.ForeignKey(Eje, on_delete=models.CASCADE, null= True, blank = True)
+
     def get_absolute_url(self):
         return reverse("alarma_aceleracion", kwargs={'pk_alarma':self.pk})
 
@@ -132,12 +88,10 @@ class AlarmaAceleracion(models.Model):
 # EVENTO DE EJE
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class EventoEje(models.Model):
-    timestamp = models.DateTimeField()
+    dt = models.DateTimeField()
     eje = models.ForeignKey(Eje, on_delete=models.CASCADE)
     en_bogie = models.ForeignKey(Bogie, on_delete=models.RESTRICT, null= True, blank = True)
-    # en_bogie_codigo = models.CharField(max_length=16, null= True, blank = True)
     en_vagon = models.ForeignKey(Vagon, on_delete=models.RESTRICT, null= True, blank = True)
-    # en_vagon_codigo = models.CharField(max_length=16, null= True, blank = True)
     lng = models.FloatField(default=-3.9820)
     lat = models.FloatField(default=40.2951)
     punto_red = models.ForeignKey(PuntoRed, on_delete=models.RESTRICT, null= True, blank = True)
@@ -150,40 +104,40 @@ class EventoEje(models.Model):
                         ('INIT_MANT', 'INICIO_MANTENIMIENTO'),
                         ('FIN_MANT', 'FIN_MANTENIMIENTO'),
                         ('CAMBIO', 'CAMBIO_ANCHO'),
-                        ('BOGIE', 'CAMBIO_BOGIE'),
-                        ('VAGON', 'CAMBIO_VAGÓN'),
                         ]
     evento = models.CharField(max_length=12, choices = opciones_evento, default = 'CIRC')
-    alarma_temp = models.ForeignKey(AlarmaTemp, on_delete=models.RESTRICT, null= True, blank = True)
-    alarma_aceleracion = models.ForeignKey(AlarmaAceleracion, on_delete=models.RESTRICT, null= True, blank = True)
     cambio = models.ForeignKey(Cambio, on_delete=models.RESTRICT, null= True, blank = True)
     mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.RESTRICT, null= True, blank = True)
     
     def __str__(self):
-        return (str(self.eje.codigo) + '-' + str(self.timestamp))
+        return ('Eje:' + str(self.eje.codigo) + '/' + str(self.evento) + '-' + str(self.timestamp))
     def get_absolute_url(self):
-        if self.evento == 'ALARM_TEMP':
-            if self.alarma_temp.pk:
-                return reverse("alarma_temperatura", kwargs={'pk':self.alarma_temp.pk})
-            else:
-                return ''
-        elif self.evento == 'ALARM_ACEL':
-            if self.alarma_aceleracion.pk:
-                return reverse("alarma_aceleracion", kwargs={'pk':self.alarma_aceleracion.pk})
-            else:
-                return ''
-        elif self.evento == 'CAMBIO':
-            if self.cambio.pk:
-                return reverse("ficha_cambio", kwargs={'pk':self.cambio.pk})
-            else:
-                return ''
-        elif (self.evento == 'INIT_MANT' or self.evento == 'FIN_MANT'):
-            if self.mantenimiento.pk:
-                return reverse("ficha_mantenimiento", kwargs={'pk':self.mantenimiento.pk})
-            else:
-                return ''
-        else:
-            return ''
+        return reverse("evento_eje", kwargs={'pk':self.pk})
+
+class EventoVagon(models.Model):
+    dt = models.DateTimeField()
+    vagon = models.ForeignKey(Vagon, on_delete=models.CASCADE)
+    lng = models.FloatField(default=-3.9820)
+    lat = models.FloatField(default=40.2951)
+    punto_red = models.ForeignKey(PuntoRed, on_delete=models.RESTRICT, null= True, blank = True)
+    opciones_evento =  [('START', 'EMPIEZA'),
+                        ('STOP', 'PARA'),
+                        ('CIRC', 'CIRCULANDO'),
+                        ('NUDO','NUDO'),
+                        ('ALARM_TEMP', 'ALARMA_TEMPERATURA'),
+                        ('ALARM_ACEL', 'ALARMA_ACELERACIONES'),
+                        ('INIT_MANT', 'INICIO_MANTENIMIENTO'),
+                        ('FIN_MANT', 'FIN_MANTENIMIENTO'),
+                        ('CAMBIO', 'CAMBIO_ANCHO'),
+                        ]
+    evento = models.CharField(max_length=12, choices = opciones_evento, default = 'CIRC')
+    cambio = models.ForeignKey(Cambio, on_delete=models.RESTRICT, null= True, blank = True)
+    mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.RESTRICT, null= True, blank = True)
+    
+    def __str__(self):
+        return ('Vagón:' + str(self.vagon.codigo) + '/' + str(self.evento) + '-' + str(self.timestamp))
+    def get_absolute_url(self):
+        return reverse("evento_vagon", kwargs={'pk':self.pk})
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

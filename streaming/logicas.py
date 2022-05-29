@@ -23,8 +23,8 @@ def punto_red (lng, lat):
         return puntored
     return None
 
-def actualizar_vagon(vagon, ejes, lista_ejes, data):
-    # Quitamos los ejes que no están y creamos evento para el eje que se mueve
+def actualizar_vagon(vagon, lista_ejes):
+    # Quitamos los ejes que no están
     posibles_ejes = Eje.objects.filter(vagon = vagon)
     for eje in posibles_ejes:
         if eje.codigo not in lista_ejes:
@@ -75,7 +75,7 @@ def comprobar_alarmas (circulacion, vagon, ejes):
                     vagon.alarma_temp = True
                     nueva_alarma = True
                     tipo = 'ALARM_TEMP'
-                elif eje.alarma_temp == True and umbral_temperaturas(msg_eje.tempa, msg_eje.tempb) < 0:   
+                elif eje.alarma_temp == True and umbral_temperaturas(msg_eje.tempa, msg_eje.tempb) < 0:
                     eje.alarma_temp = False
                     vagon.alarma_temp = False
                 # ACELERACIONES
@@ -96,7 +96,7 @@ def comprobar_alarmas (circulacion, vagon, ejes):
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # FUNCIÓN PRINCIPAL: comprobar_eventos
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-def procesar_mensaje(mensaje):
+def procesar_mensaje(circulacion):
     ''' Nos han pasado un mensaje de movimiento de vagón e inspeccionamos si hay que 
         mover los elementos y/o crear un evento
     '''
@@ -105,12 +105,13 @@ def procesar_mensaje(mensaje):
     # 0. OBTENEMOS LA INFORMACIÓN QUE VIENE EN EL MENSAJE DE CIRCULACIÓN ENVIADO DESDE UN VAGÓN
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # CONVERTIMOS EL MENSAJE (dict) A UN OBJETO PYTHON ESTRUCTURADO
-    circulacion = ObjetoPy(mensaje)
+    # circulacion = ObjetoPy(mensaje)
     # EXTAREMOS DATOS
     dt = datetime.strptime(circulacion.ts,'%Y-%m-%d %H:%M:%S')      # Fecha / hora de la circualción reportada
     lista_ejes = []                                                 # Que ejes van en el vagón de la circulación
     for msg_eje in circulacion.msgs_ejes:
         lista_ejes.append(msg_eje.eje)
+        petaz = msg_eje.tempa
     nueva_lng = float(circulacion.lng)                              # Nueva longitud indicada en el mensaje de circulación
     nueva_lat = float(circulacion.lat)                              # Nueva lat
     nueva_vel = float(circulacion.vel)                              # Nueva vel
@@ -146,7 +147,7 @@ def procesar_mensaje(mensaje):
         vagon.vel = 0.0
     # SI EL MENSAJE ES DE DESPERTAR O DE CIRCULAR PERO LA TRANSMISIÓN ESTÁ PARADA, PONEMOS EL VAGÓN EN MODO DESPIERTO
     if (circulacion.tipo_msg == 'WAKE' or circulacion.tipo_msg == 'CIRC') and vagon.transmitiendo == False:
-        vagon.vagon.transmitiendo == True
+        vagon.transmitiendo == True
 
     #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     # 3. ACTUALIZAMOS LA COMPOSICIÓN DEL VAGÓN SEGÚN MENSAJE
