@@ -10,11 +10,11 @@ from streaming.circulacion import Circulacion
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def MensajeCirculacion(request):
-    try:
-        circulacion = Circulacion(request.data)
-        circulacion.eventos()
-        circulacion.guardar()
-        return Response(request.data, status = status.HTTP_201_CREATED)
-    except:
-        return Response('No se pudo procesar mensaje de circulación', status=status.HTTP_400_BAD_REQUEST)
+    #try:
+    circulacion = Circulacion(request.data)
+    circulacion.eventos()
+    circulacion.guardar()
+    return Response(request.data, status = status.HTTP_201_CREATED)
+    #except:
+    #return Response('No se pudo procesar mensaje de circulación', status=status.HTTP_400_BAD_REQUEST)
 
