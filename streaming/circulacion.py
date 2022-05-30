@@ -105,8 +105,8 @@ def tipo_evento(parado_ini, en_movimiento, en_nudo_ini, en_nudo_fin, diferencia)
         if en_nudo_fin and en_nudo_ini == False: # entramos en NUDO ferroviario
             evento = 'NUDO'
         #  Si ha pasado un tiempo sin eventos -> EVENTO INTERMEDIO (de control)
-        elif diferencia.total_seconds() > 1800:       # 30 minutos
-            evento = 'CIRC'
+        #elif diferencia.total_seconds() > 1800:       # 30 minutos
+        #    evento = 'CIRC'
     return evento
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -338,7 +338,9 @@ class Circulacion():
         ''' Función que coge los datos de la circulación y chequea si hay que generar eventos o alarmas. 
             Y los genera
         '''
-        diferencia = self.dt - self.ultimo_evento_dt
+        #diferencia = self.dt - self.ultimo_evento_dt
+        #diferencia = self.dt - self.vagon.ultimo_evento_dt
+        diferencia = 1000
         self.puntored, self.en_nudo_fin = punto_red(self.lng_fin, self.lat_fin)
         evento = tipo_evento(self.parado_ini, self.en_movimiento, self.en_nudo_ini, self.en_nudo_fin, diferencia)
 
