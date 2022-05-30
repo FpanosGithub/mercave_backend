@@ -3,6 +3,7 @@ from material.models import Vagon, Bogie, Eje
 from red_ferroviaria.models import PuntoRed
 from eventos.models import EventoEje, EventoVagon
 from datetime import datetime
+import pytz
 
 ACC_TIPICA_EJE_X = 2.1
 ACC_TIPICA_EJE_Y = 3.4
@@ -219,7 +220,7 @@ class Circulacion():
         obj = ObjetoPy(data)
         #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         self.valida = True
-        self.dt = datetime.strptime(obj.dt,'%Y-%m-%d %H:%M:%S')
+        self.dt = datetime.strptime(obj.dt,'%Y-%m-%d %H:%M:%S').replace(tzinfo=pytz.timezone('Europe/Madrid'))
         self.tipo_msg = obj.tipo_msg
         self.lng_fin = float(obj.lng)
         self.lat_fin = float(obj.lat)
@@ -337,7 +338,7 @@ class Circulacion():
         ''' Función que coge los datos de la circulación y chequea si hay que generar eventos o alarmas. 
             Y los genera
         '''
-        diferencia = self.dt - self.ultimo_evento_dt.replace(tzinfo=None)
+        diferencia = self.dt - self.ultimo_evento_dt
         self.puntored, self.en_nudo_fin = punto_red(self.lng_fin, self.lat_fin)
         evento = tipo_evento(self.parado_ini, self.en_movimiento, self.en_nudo_ini, self.en_nudo_fin, diferencia)
 
