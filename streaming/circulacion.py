@@ -53,39 +53,39 @@ def umbral_aceleraciones(aax,abx,aay,aby,aaz,abz):
     acc = -1
     # ax
     for valor in aax:
-        if valor > (ACC_TIPICA_EJE_X * 1.1):
+        if valor > (ACC_TIPICA_EJE_X * 3.0):
             return 1
-        if valor < (ACC_TIPICA_EJE_X * 1.1) and valor > (ACC_TIPICA_EJE_X * 0.9):
+        elif valor > (ACC_TIPICA_EJE_X * 0.8):
             acc = 0
     # ay
     for valor in aay:
-        if valor > (ACC_TIPICA_EJE_Y * 1.1):
+        if valor > (ACC_TIPICA_EJE_Y * 3.0):
             return 1
-        if valor < (ACC_TIPICA_EJE_Y * 1.1) and valor > (ACC_TIPICA_EJE_Y * 0.9):
+        elif valor > (ACC_TIPICA_EJE_Y * 0.8):
             acc = 0 
     # az
     for valor in aaz:
-        if valor > (ACC_TIPICA_EJE_Z * 1.1):
+        if valor > (ACC_TIPICA_EJE_Z * 3.0):
             return 1
-        if valor < (ACC_TIPICA_EJE_Z * 1.1) and valor > (ACC_TIPICA_EJE_Z * 0.9):
+        elif valor > (ACC_TIPICA_EJE_Z * 0.8):
             acc = 0
     # bx
     for valor in abx:
-        if valor > (ACC_TIPICA_EJE_X * 1.1):
+        if valor > (ACC_TIPICA_EJE_X * 3.0):
             return 1
-        if valor < (ACC_TIPICA_EJE_X * 1.1) and valor > (ACC_TIPICA_EJE_X * 0.9):
+        elif valor > (ACC_TIPICA_EJE_X * 0.8):
             acc = 0
     # by
     for valor in aby:
         if valor > (ACC_TIPICA_EJE_Y * 1.1):
             return 1
-        if valor < (ACC_TIPICA_EJE_Y * 1.1) and valor > (ACC_TIPICA_EJE_Y * 0.9):
+        elif valor > (ACC_TIPICA_EJE_Y * 0.8):
             acc = 0
     # bz
     for valor in abz:
         if valor > (ACC_TIPICA_EJE_Z * 1.1):
             return 1
-        if valor < (ACC_TIPICA_EJE_Z * 1.1) and valor > (ACC_TIPICA_EJE_Z * 0.9):
+        elif valor > (ACC_TIPICA_EJE_Z * 0.8):
             acc = 0
 
     return acc
