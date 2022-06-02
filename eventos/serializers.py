@@ -1,7 +1,8 @@
 from dataclasses import fields
 from rest_framework import serializers
-
 from eventos.models import Cambio, Mantenimiento, AlarmaCambio, AlarmaTemp, AlarmaAceleracion, EventoEje
+
+
 
 class CambioSerializer(serializers.ModelSerializer):
     class Meta:

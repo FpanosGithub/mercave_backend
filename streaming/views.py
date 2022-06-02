@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.response import Response
 from streaming.circulacion import Circulacion
+from streaming.cambio import CambioEje
 
 
 # Create your views here.
@@ -14,7 +15,17 @@ def MensajeCirculacion(request):
     circulacion = Circulacion(request.data)
     circulacion.eventos()
     circulacion.guardar()
-    return Response(request.data, status = status.HTTP_201_CREATED)
-    #except:
-    #return Response('No se pudo procesar mensaje de circulación', status=status.HTTP_400_BAD_REQUEST)
+    return Response(request.data)
+    #return Response(request.data, status = status.HTTP_201_CREATED)
 
+# Create your views here.
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def MensajeCambio(request):
+    #try:
+    cambio_eje = CambioEje(data = request.data)
+    if cambio_eje.is_valid():
+        cambio_eje.alarmas()
+        cambio_eje.save()
+    return Response(request.data)
+    

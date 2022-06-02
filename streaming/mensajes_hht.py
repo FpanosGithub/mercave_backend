@@ -54,3 +54,33 @@ data3num = \
         }
     ]
 }
+
+
+cambio1 = \
+{
+"eje":"TR0004",
+"alarma":0,
+"inicio":"2022-06-03 12:12:12",
+"cambiador":"La-Gineta",
+"sentido":"UICIB",
+"V":"2.77",
+"FV":250,
+"tdaM":5000,
+"fdaM":30,
+"ddaM":10,
+"tcaM":10000,
+"fcaM":20,
+"dcaM":70,
+"team":15000,
+"feam":10,
+"deam":20,
+"tdbM":25000,
+"fdbM":30,
+"ddbM":10,
+"tcbM":300000,
+"fcbM":20,
+"dcbM":70,
+"tebm":35000,
+"febm":10,
+"debm":20
+}
