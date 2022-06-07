@@ -101,6 +101,7 @@ class EventoEje(models.Model):
                         ('NUDO','NUDO'),
                         ('ALARM_TEMP', 'ALARMA_TEMPERATURA'),
                         ('ALARM_ACEL', 'ALARMA_ACELERACIONES'),
+                        ('ALARM_CAMB', 'ALARMA_CAMBIO'),
                         ('INIT_MANT', 'INICIO_MANTENIMIENTO'),
                         ('FIN_MANT', 'FIN_MANTENIMIENTO'),
                         ('CAMBIO', 'CAMBIO_ANCHO'),
@@ -110,7 +111,7 @@ class EventoEje(models.Model):
     mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.RESTRICT, null= True, blank = True)
     
     def __str__(self):
-        return ('Eje:' + str(self.eje.codigo) + '/' + str(self.evento) + '-' + str(self.timestamp))
+        return ('Eje:' + str(self.eje.codigo) + '/' + str(self.evento) + '-' + str(self.dt))
     def get_absolute_url(self):
         return reverse("evento_eje", kwargs={'pk':self.pk})
 
@@ -135,7 +136,7 @@ class EventoVagon(models.Model):
     mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.RESTRICT, null= True, blank = True)
     
     def __str__(self):
-        return ('Vagón:' + str(self.vagon.codigo) + '/' + str(self.evento) + '-' + str(self.timestamp))
+        return ('Vagón:' + str(self.vagon.codigo) + '/' + str(self.evento) + '-' + str(self.dt))
     def get_absolute_url(self):
         return reverse("evento_vagon", kwargs={'pk':self.pk})
 

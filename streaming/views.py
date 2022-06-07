@@ -24,8 +24,7 @@ def MensajeCirculacion(request):
 def MensajeCambio(request):
     #try:
     cambio_eje = CambioEje(data = request.data)
-    if cambio_eje.is_valid():
-        cambio_eje.alarmas()
-        cambio_eje.save()
+    cambio_eje.alarma_cambio()
+    cambio_eje.guardar()
     return Response(request.data)
     

@@ -63,7 +63,7 @@ cambio1 = \
 "inicio":"2022-06-03 12:12:12",
 "cambiador":"La-Gineta",
 "sentido":"UICIB",
-"V":"2.77",
+"V":2.77,
 "FV":250,
 "tdaM":5000,
 "fdaM":30,

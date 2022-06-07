@@ -81,7 +81,6 @@ CSRF_TRUSTED_ORIGINS = [
     'http://mercave-backend.azurewebsites.net',
 ]
 
-
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
@@ -102,7 +101,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
@@ -116,7 +114,6 @@ DATABASES = {
         "PORT": "",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
