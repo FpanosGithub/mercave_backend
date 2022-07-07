@@ -4,7 +4,6 @@ from rest_framework.routers import SimpleRouter
 from organizaciones.views import Organizaciones, Diseñadores, Fabricantes, LicenciasFabricacion, Mantenedores, Keepers, Operadores, Aprovadores,Certificadores
 
 router = SimpleRouter()
-router.register('', Organizaciones, basename = 'organizaciones')
 router.register('diseñadores', Diseñadores, basename = 'diseñadores')
 router.register('fabricantes', Fabricantes, basename = 'fabricantes')
 router.register('licencias_fabricacion', LicenciasFabricacion, basename = 'licencias_fabricacion')

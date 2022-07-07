@@ -11,7 +11,7 @@ from organizaciones.serializers import MantenedorSerializer, KeeperSerializer, O
 # Create your views here.
 
 class Organizaciones(viewsets.ModelViewSet):
-#    permission_classes = (IsJefeOrReadOnly,)
+#   permission_classes = (IsJefeOrReadOnly,)
     queryset = Organizacion.objects.all()
     serializer_class = OrganizacionSerializer
 

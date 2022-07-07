@@ -1,35 +1,19 @@
-from django.shortcuts import render
-from rest_framework import generics, viewsets
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.decorators import api_view, permission_classes
+#!!!!!
+from eventos.models import EventoEje
+from material.models import Eje
+from eventos.serializers import EventoEjeSerializer
+#!!!!!
 
-#from organizaciones.permisos import IsJefeOrReadOnly
+# Views de Eventos.
 
-from eventos.models import Cambio, Mantenimiento, AlarmaCambio, AlarmaTemp, AlarmaAceleracion, EventoEje
-from eventos.serializers import CambioSerializer, MantenimientoSerializer, AlarmaCambioSerializer, AlarmaTempSerializer, AlarmaAceleracionSerializer, EventoEjeSerializer
+@api_view()
+@permission_classes([AllowAny])
+def EventosEje(request, pk):
+    #try:
+    eventos_eje = EventoEje.objects.filter(eje__id=pk)
+    serializer = EventoEjeSerializer(eventos_eje, many=True)
 
-# Create your views here.
-
-class Cambios(viewsets.ModelViewSet):
-    queryset = Cambio.objects.all()
-    serializer_class = CambioSerializer
-
-class Mantenimientos(viewsets.ModelViewSet):
-    queryset = Mantenimiento.objects.all()
-    serializer_class = MantenimientoSerializer
-
-class AlarmasCambios(viewsets.ModelViewSet):
-    queryset = AlarmaCambio.objects.all()
-    serializer_class = AlarmaCambioSerializer
-
-class AlarmasTemp(viewsets.ModelViewSet):
-    queryset = AlarmaTemp.objects.all()
-    serializer_class = AlarmaTempSerializer
-
-class AlarmasAceleracion(viewsets.ModelViewSet):
-    queryset = AlarmaAceleracion.objects.all()
-    serializer_class = AlarmaAceleracionSerializer
-
-class EventosEje(viewsets.ModelViewSet):
-    queryset = EventoEje.objects.all()
-    serializer_class = EventoEjeSerializer
-
-
+    return Response(serializer.data)

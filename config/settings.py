@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'ingenieria',
     'red_ferroviaria',
     'streaming',
+    'mapas',
+    'graficos',
     'usuarios',
 ]
 
@@ -67,7 +69,7 @@ MIDDLEWARE = [
 
 # REST framework configuration
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated',],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny',],
 }
 # CORS HEADERS configuration
 CORS_ORIGIN_WHITELIST = (

@@ -105,6 +105,7 @@ class Eje(models.Model):
     operador = models.ForeignKey(Operador, on_delete=models.RESTRICT, null=True, blank=True)
     mantenedor = models.ForeignKey(Mantenedor, on_delete=models.RESTRICT, null=True, blank=True)
     fecha_fab = models.DateField(null=True, blank=True)
+    ultimo_mant = models.DateField(null=True, blank=True)
     num_cambios = models.IntegerField(default=0)
     km = models.FloatField(default=0)                                                                       # km
     coef_trabajo = models.FloatField(default=0)
@@ -113,6 +114,7 @@ class Eje(models.Model):
     estado = models.CharField(max_length=15, choices = [('CIRCULANDO','CIRCULANDO'),('PARADO','PARADO'),('MANTENIMIENTO','MANTENIMIENTO')], default = 'PARADO')
     alarma_temp = models.BooleanField(default=False)
     alarma_aceleraciones = models.BooleanField(default=False)
+    alarma_cambio = models.BooleanField(null=True,default=False)
     tempa = models.FloatField(default=25.0, null=True, blank=True)
     tempb = models.FloatField(default=25.0, null=True, blank=True)
     lng = models.FloatField(default=-3.9820)

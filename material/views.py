@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from rest_framework import generics, viewsets
+from rest_framework import viewsets
 from material.permisos import IsJefeOrReadOnly
 from material.models import Composicion, Cambiador, Vagon, Bogie, Eje
 from material.serializers import ComposicionSerializer, VagonSerializer, BogieSerializer, EjeSerializer, CambiadorSerializer
@@ -19,7 +18,7 @@ class Bogies(viewsets.ModelViewSet):
     serializer_class = BogieSerializer
 
 class Ejes(viewsets.ModelViewSet):
-    queryset = Eje.objects.all()
+    queryset = Eje.objects.order_by('id')
     serializer_class = EjeSerializer
 
 class Cambiadores(viewsets.ModelViewSet):

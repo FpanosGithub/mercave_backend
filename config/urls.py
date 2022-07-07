@@ -24,5 +24,7 @@ urlpatterns = [
     path('organizaciones/', include('organizaciones.urls')),
     path('red_ferr/', include('red_ferroviaria.urls')),
     path('streaming/', include('streaming.urls')),
+    path('mapas/', include('mapas.urls')),
+    path('graficos/', include('graficos.urls')),
     path('api_auth/', include('rest_framework.urls')),
 ]
