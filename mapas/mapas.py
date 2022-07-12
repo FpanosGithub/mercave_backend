@@ -1,7 +1,6 @@
 import folium
 from folium.plugins import MarkerCluster
 import datetime
-import html
 
 def elegir_color (dt, evento):
     if evento == 'START':

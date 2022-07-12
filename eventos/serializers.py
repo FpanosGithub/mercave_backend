@@ -39,3 +39,30 @@ class EventoVagonSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = EventoVagon
+
+
+class DatosCirculacion ():
+    def __init__(self, cursor):
+        #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        velocidades = []
+        temperaturasA = []
+        temperaturasB =[]
+        aax = []
+        aay = []
+        aaz = []
+        abx = []
+        aby = []
+        abz = []
+
+        for doc in cursor:
+            velocidades.append(doc["vel"])
+            temperaturasA.append(doc["tempa"])
+            temperaturasB.append(doc["tempb"])
+            aax.extend(doc["aax"])
+            aay.extend(doc["aay"])
+            aaz.extend(doc["aaz"])
+            abx.extend(doc["abx"])
+            aby.extend(doc["aby"])
+            abz.extend(doc["abz"])
+        
+        self.data = {'vel':velocidades, 'tempa':temperaturasA, 'tempb':temperaturasB,'aax':aax,'aay':aay,'aaz':aaz,'abx':abx,'aby':aby,'abz':abz}
