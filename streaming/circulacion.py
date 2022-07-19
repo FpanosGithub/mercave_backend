@@ -363,6 +363,7 @@ class Circulacion():
                     lat = self.lat_fin,
                     punto_red = self.puntored,
                     evento = evento,
+                    vel = self.vel,
                     ).save()
             for eje in self.ejes:
                 EventoEje(
@@ -373,6 +374,9 @@ class Circulacion():
                     lat = self.lat_fin,
                     punto_red = self.puntored,
                     evento = evento,
+                    vel = self.vel,
+                    tempa = eje.tempa,
+                    tempb= eje.tempb,
                     ).save()
 
         # MIRAMOS NUEVA ALARMA de TEMPERATURA o de ACELERACIONES -> disparamos EVENTOS

@@ -30,7 +30,7 @@ def elegir_color (dt, evento):
 
 
 def mapa_ejes(ejes):
-    mapa = folium.Map((39.8000, -2.9019), zoom_start=6)
+    mapa = folium.Map((39.8000, -2.9019), zoom_start=7, tiles = "Stamen Toner")
     mc = MarkerCluster()
     color = 'red'
     for eje in ejes:
@@ -51,7 +51,7 @@ def mapa_ejes(ejes):
     return mapa._repr_html_()
 
 def mapa_eje(eje, eventos):
-    mapa_int = folium.Map((eje.lat, eje.lng), zoom_start=5, tiles = "Stamen Toner")
+    mapa_int = folium.Map((eje.lat, eje.lng), zoom_start=7, tiles = "Stamen Toner")
     colores_circulaciones = ['#cfd5ea','#cfd5ea','#39a78e','#14a4f4','#a80ebe','#cc0033']
     color_fabricante = 'red'
     # Pop up eje

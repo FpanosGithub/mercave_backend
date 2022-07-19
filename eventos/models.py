@@ -107,6 +107,9 @@ class EventoEje(models.Model):
                         ('CAMBIO', 'CAMBIO_ANCHO'),
                         ]
     evento = models.CharField(max_length=12, choices = opciones_evento, default = 'CIRC')
+    vel = models.FloatField(default=0, null= True, blank = True)
+    tempa = models.FloatField(default=25, null= True, blank = True)
+    tempb = models.FloatField(default=25, null= True, blank = True)
     cambio = models.ForeignKey(Cambio, on_delete=models.RESTRICT, null= True, blank = True)
     mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.RESTRICT, null= True, blank = True)
     
@@ -132,7 +135,7 @@ class EventoVagon(models.Model):
                         ('CAMBIO', 'CAMBIO_ANCHO'),
                         ]
     evento = models.CharField(max_length=12, choices = opciones_evento, default = 'CIRC')
-    cambio = models.ForeignKey(Cambio, on_delete=models.RESTRICT, null= True, blank = True)
+    vel = models.FloatField(default=0, null= True, blank = True)
     mantenimiento = models.ForeignKey(Mantenimiento, on_delete=models.RESTRICT, null= True, blank = True)
     
     def __str__(self):
