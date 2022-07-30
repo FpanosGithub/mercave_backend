@@ -418,7 +418,7 @@ class Circulacion():
             eje.guardar(self.vagon)   
             # Guardamos circulación - eje en mercave_mongo
             msg= {
-            'dt': self.dt.strftime("%m/%d/%Y %H:%M:%S"), 
+            'dt': self.dt, 
             'tipo_msg':self.tipo_msg,
             'eje':eje.codigo,
             'en_vagon': self.vagon.codigo, 

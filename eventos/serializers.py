@@ -30,6 +30,7 @@ class AlarmaAceleracionSerializer(serializers.ModelSerializer):
 class EventoEjeSerializer(serializers.ModelSerializer):
     en_bogie = serializers.StringRelatedField(many=False)
     en_vagon = serializers.StringRelatedField(many=False)
+    eje = serializers.StringRelatedField(many=False)
     class Meta:
         fields = '__all__'
         model = EventoEje

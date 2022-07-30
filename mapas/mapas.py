@@ -4,24 +4,24 @@ import datetime
 
 def elegir_color (dt, evento):
     if evento == 'START':
-        color = 'darkgreen'
+        color = 'green'
     elif evento == 'STOP':
-        color = 'darkred'
-    elif evento == 'NUDO':
-        color = 'orange'
-    elif evento == 'ALARM_TEMP' or  evento == 'ALARM_ACEL' or evento == 'ALARM_CAMB':
         color = 'red'
+    elif evento == 'NUDO':
+        color = 'gray'
+    elif evento == 'ALARM_TEMP' or  evento == 'ALARM_ACEL' or evento == 'ALARM_CAMB':
+        color = 'darkred'
     elif evento == 'CAMBIO':
-        color = 'purple'
+        color = 'darkpurple'
     elif evento == 'INIT_MANT' or evento == 'FIN_MANT':
         color = 'pink'
     elif evento == 'CIRC':
         if dt.date() == datetime.date.today():
-            color = 'blue'
+            color = 'darkblue'
         elif dt.date() == datetime.date.today() - datetime.timedelta(days=1):
-            color = 'cadetblue'
+            color = 'purple'
         else:
-            color = 'lightblue'
+            color = 'blue'
     else:
         color = 'gray'
 
@@ -52,7 +52,6 @@ def mapa_ejes(ejes):
 
 def mapa_eje(eje, eventos):
     mapa_int = folium.Map((eje.lat, eje.lng), zoom_start=7, tiles = "Stamen Toner")
-    colores_circulaciones = ['#cfd5ea','#cfd5ea','#39a78e','#14a4f4','#a80ebe','#cc0033']
     color_fabricante = 'red'
     # Pop up eje
     location = [eje.lat, eje.lng]
@@ -74,9 +73,9 @@ def mapa_eje(eje, eventos):
         popup = str(evento.punto_red) + ' - ' + str(evento.dt) + ' - ' + str(evento.evento)
         folium.CircleMarker(
             location = location,
-            radius = 6,
+            radius = 12,
             popup= popup,
-            color = color,
+            color = False,
             fill = True,
             fill_color = color,
         ).add_to(mapa_int)
